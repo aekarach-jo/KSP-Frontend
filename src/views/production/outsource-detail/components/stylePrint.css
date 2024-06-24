@@ -1,0 +1,121 @@
+#page-wrap-print { font: 14px/1.4 sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20px 20px 20px 20px; }
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#page-wrap-print textarea { border: 0; font: 14px sans-serif; overflow: hidden; resize: none; }
+#page-wrap-print table { border-collapse: collapse; }
+#page-wrap-print table td, #page-wrap-print table th { border: 1px solid black; padding: 5px; }
+#page-wrap-print a { cursor: pointer; }
+/* #header { height: 35px; width: 100%; margin: 20px 0; background: #222 !important; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; } */
+
+#logo { text-align: right; float: right; position: relative; margin-top: 25px; border: 1px solid #fff; max-width: 540px; max-height: 100px; overflow: hidden; }
+#logoctr { display: none; }
+#logohelp { text-align: left; display: none; font-style: italic; padding: 10px 5px;}
+#logohelp input { margin-bottom: 5px; }
+.edit #logohelp { display: block; }
+.edit #save-logo, .edit #cancel-logo { display: inline; }
+.edit #image, #save-logo, #cancel-logo, .edit #change-logo, .edit #delete-logo { display: none; }
+#customer-title { font-size: 20px; font-weight: bold; float: left; }
+#meta { margin-top: 1px; width: 300px; float: right; }
+#meta td { text-align: right;  }
+#meta td.meta-head { text-align: left; background: #eee; }
+#meta td textarea { width: 100%; height: 20px; text-align: right; }
+
+#items { clear: both; width: 100%; margin: 30px 0 0 0; border: 0px solid black; }
+#items-detail { clear: both; width: 100%; border: 1px solid black; }
+#items th { background: #eee; }
+#items .th-col div {font-size: 12px; text-align: center;}
+/* #items tr.item-row td { height: 10px; } */
+#items td.item-num input {  border: 0; width: 20px; vertical-align: middle; text-align: center;}
+#items td.item-code input {  border: 0; width: 100px; vertical-align: middle; text-align: start;}
+#items td.item-description input {  border: 0; width: 320px; vertical-align: middle; text-align: start;}
+#items td.item-quantity input {  border: 0; width: 50px; vertical-align: middle; text-align: center;}
+#items td.item-unit input {  border: 0; width: 50px; vertical-align: middle; text-align: center;}
+#items td.item-price-unit input {  border: 0; width: 50px; vertical-align: middle; text-align: center;}
+/* #items td.item-amount textarea { width: 50px; vertical-align: middle; text-align: center;} */
+#items td.total-line { border: 0; text-align: left; }
+#items td.deli-line {border: 0; text-align: left; display: flex; flex-direction: row; gap: 10px; }
+#items td.total-value { padding: 10px; }
+#items td.total-value textarea { height: 20px; background: none; }
+#items td.balance { background: #eee; }
+#items td.blank { border: 0; }
+#items td.blank-last { border: 0; border-bottom: 1px solid #000; }
+
+#terms { text-align: center; margin: 20px 0 0 0; }
+#terms h5 { text-transform: uppercase; font: 13px Helvetica, Sans-Serif; letter-spacing: 10px; border-bottom: 1px solid black; padding: 0 0 8px 0; margin: 0 0 8px 0; }
+#terms textarea { width: 100%; text-align: center;}
+#terms .group-signature {display: flex; flex-direction: row; justify-content: space-evenly;}
+#terms .group-signature .signature {display: flex; flex-direction: column; justify-content: space-evenly; gap: 10px;}
+#terms .group-date {display: flex; flex-direction: row; justify-content: center; gap: 2rem;}
+
+#page-wrap-print textarea:hover, #page-wrap-print textarea:focus, #items td.total-value textarea:hover, #items td.total-value textarea:focus, .delete:hover { background-color:#f2efcf; }
+
+.delete-wpr { position: relative;}
+.delete { display: block; color: #000; text-decoration: none; position: absolute; background: #ffffff; font-weight: bold; padding: 0px 3px; border: 1px solid; border-bottom-left-radius: 5px; border-top-left-radius: 5px; top: 8px; left: -22px; font-family: Verdana; font-size: 12px; }
+
+@page {
+  size: A4 portrait;
+  /* margin: 1rem 1rem 2rem 1rem; */
+}
+/* @media print {
+  #selectHide .react-select__control{ border: 0;}
+  #selectHide .react-select__control .react-select__indicators { display: none; }
+  input.rmdp-input { border: 0; background-color: transparent; color: black;}
+  input.form-control { border: 0;}
+
+  #page-wrap-print {
+    display: block;
+  }
+
+  /* #template {
+    display: none;
+  } */
+
+  .page-break {
+    page-break-after: always;
+  }
+  .custom-padding {
+    padding-left: '5rm';
+  }
+
+
+/* } */
+@media not print {
+  #page-wrap-print {
+    display: none;
+  }
+}
+/* @media screen {
+  #page-wrap-print-print {
+    display: none;
+  }
+} */
+
+/* ---  Autocomplete  -- */
+#react-autowhatever-1 {
+  width: 24.2rem;
+}
+
+#hide {
+  position: absolute;
+  opacity: 0;
+  z-index: -100;
+  white-space: pre;
+}
+
+#bidder {
+  min-width: 180px;
+  padding: 1px 4px;
+  text-align: center;
+  border: none;
+  margin: 0px 2px;
+}
+
+#inputProp{
+  min-height : 0px !important
+}
+
+/* .rmdp-input{
+  padding: 0px !important;
+} */

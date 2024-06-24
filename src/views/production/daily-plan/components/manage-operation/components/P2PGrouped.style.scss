@@ -1,0 +1,71 @@
+.grouped-list {
+  .list-group.grouped {
+    min-height: 3.5rem;
+    position: relative;
+
+    &:empty:before {
+      display: flex;
+      position: absolute;
+      content: 'No product in this group';
+      width: 100%;
+      height: 3rem;
+      align-items: center;
+      justify-content: center;
+      background: rgba(128, 128, 128, 0.2);
+      border-radius: var(--border-radius-lg);
+    }
+  }
+}
+
+.card-style{
+  padding: 0px !important;
+  // padding-left: 15px !important;
+}
+
+.card-style .os-theme-dark>.os-scrollbar>.os-scrollbar-track>.os-scrollbar-handle, .os-theme-light>.os-scrollbar>.os-scrollbar-track>.os-scrollbar-handle{
+  background: rgba(39 ,154 ,172, 0.5) !important
+}
+
+.multiFilter{
+  width: auto;
+  min-width: 20%;
+}
+
+.custom-input {
+  width: 60% !important;
+  border-radius: 15px;
+  border: none;
+  padding: 4px 12px;
+  background-color: white;
+  height: 20px !important;
+}
+
+.custom-input:focus {
+  outline: none;
+  box-shadow: 0 0 10px 2px #0074d9;
+}
+
+.custom-input-group {
+  border-radius: 15px;
+  border: none;
+  color: white;
+  font-weight: 700;
+  padding: 4px 12px;
+  background-color: transparent;
+  height: 20px !important;
+  width: 7rem !important;
+}
+
+.custom-input-group:focus {
+  outline: none;
+  // box-shadow: 0 0 10px 2px #0074d9;
+}
+
+.form-check .form-check-input {
+  background-color: white;
+}
+
+.form-check .form-check-input:checked{
+  background-color: #0074d9;
+  border-color: #0074d9 !important;
+}

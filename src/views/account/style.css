@@ -1,0 +1,44 @@
+#page-wrap { font: 14px/1.4 sans-serif; width: 210mm; height: 297mm; margin: 0 auto; padding: 0px 20px 50px 20px; display: flex; flex-direction: column; justify-content: space-between;}
+
+#page-wrap textarea { border: 0; font: 14px sans-serif; overflow: hidden; resize: none; }
+#page-wrap table { border-collapse: collapse; }
+#page-wrap table td, #page-wrap table th { border: 1px solid black; padding: 5px; }
+#page-wrap a { cursor: pointer; }
+#header { height: 35px; width: 100%; margin: 20px 0; background: #222 !important; text-align: center; color: white; font: bold 15px Helvetica, Sans-Serif; text-decoration: uppercase; letter-spacing: 20px; padding: 8px 0px; }
+
+
+#items { clear: both; width: 100%; margin: 30px 0 0 0; border: 0px solid black; }
+#items-detail { clear: both; width: 100%; margin: 30px 0 0 0; border: 1px solid black; }
+#items th { background: #eee; }
+#items .th-col div {font-size: 12px; text-align: center;}
+/* #items tr.item-row td { height: 10px; } */
+#items td.item-num input {  border: 0; width: 20px; vertical-align: middle; text-align: center;}
+#items td.item-code input {  border: 0; width: 100px; vertical-align: middle; text-align: start;}
+#items td.item-description input {  border: 0; width: 320px; vertical-align: middle; text-align: start;}
+#items td.item-quantity input {  border: 0; width: 50px; vertical-align: middle; text-align: center;}
+#items td.item-unit input {  border: 0; width: 35px; vertical-align: middle; text-align: center;}
+#items td.item-price-unit input {  border: 0; width: 50px; vertical-align: middle; text-align: center;}
+/* #items td.item-amount textarea { width: 50px; vertical-align: middle; text-align: center;} */
+#items td.total-line { border: 0; text-align: left; }
+#items td.deli-line {border: 0; text-align: left; display: flex; flex-direction: row; gap: 10px; }
+#items td.total-value { padding: 10px; }
+#items td.total-value textarea { height: 20px; background: none; }
+#items td.balance { background: #eee; }
+#items td.blank { border: 0; }
+#items td.blank-last { border: 0; border-bottom: 1px solid #000; }
+
+#terms { text-align: center; margin: 20px 0 0 0; }
+#terms h5 { text-transform: uppercase; font: 13px Helvetica, Sans-Serif; letter-spacing: 10px; border-bottom: 1px solid black; padding: 0 0 8px 0; margin: 0 0 8px 0; }
+#terms textarea { width: 100%; text-align: center;}
+#terms .group-signature {display: flex; flex-direction: row; justify-content: space-evenly;}
+#terms .group-signature .signature {display: flex; flex-direction: column; justify-content: space-evenly; gap: 10px;}
+#terms .group-date {display: flex; flex-direction: row; justify-content: center; gap: 2rem;}
+
+#page-wrap textarea:hover, #page-wrap textarea:focus, #items td.total-value textarea:hover, #items td.total-value textarea:focus, .delete:hover { background-color:#f7f2c5; }
+
+@media print {
+  #hiderow,
+  .delete {
+    display: none;
+  }
+}

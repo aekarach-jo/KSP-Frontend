@@ -1,0 +1,25 @@
+/* print-style.css */
+
+/* Reset margins and paddings for the page */
+@page {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Apply styles for the printed table */
+  .table-print {
+    width: 100%; /* Make sure the table expands to fit the printable area */
+    table-layout: auto; /* Allow the table to adjust column widths as needed */
+  }
+  
+  /* Ensure cells expand to fit content */
+  .table-print td {
+    white-space: normal; /* Allow text to wrap within cells */
+    word-break: break-word; /* Break words if they don't fit within a single line */
+    border: 1px solid #ddd; /* Add borders for cells */
+    padding: 8px; /* Add padding for better spacing */
+  }
+  
+  /* Additional print styles for other elements */
+  /* ... */
+  

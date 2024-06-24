@@ -1,0 +1,10 @@
+.drop-zone{
+    height: 10.7rem;
+}
+.dzu-inputLabel:hover{
+    animation-duration: 0.5s;
+    border: 1px solid;
+    opacity: 0.2;
+    border-radius: 10px;
+    transition: all .2s;
+}

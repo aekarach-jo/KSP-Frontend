@@ -1,0 +1,16 @@
+// React table
+table.react-table.rows {
+  tr.empty-row {
+    // box-shadow: none;
+
+    td {
+      // border: none;
+      // background: none;
+      height: 100px;
+      vertical-align: middle;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      text-align: center;
+    }
+  }
+}

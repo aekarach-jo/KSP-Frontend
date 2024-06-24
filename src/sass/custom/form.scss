@@ -1,0 +1,32 @@
+.form-control {
+  &[readonly] {
+    color: var(--body);
+    -webkit-text-fill-color: initial !important;
+  }
+
+  &.placeholder-muted::placeholder {
+    opacity: .7;
+  }
+}
+
+.form-check.custom-card.through-content {
+  &:hover .form-check-label,
+  .form-check-input:checked ~ .form-check-label {
+    &::before {
+      pointer-events: none;
+    }
+  }
+}
+
+.form-label {
+  &.required::after {
+    content: ' *';
+    color: red;
+  }
+}
+
+.react-select__control {
+  &.react-select__control--is-disabled {
+    background: rgba(var(--separator-rgb), 0.5) !important;
+  }
+}

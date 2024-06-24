@@ -1,0 +1,69 @@
+#printing {
+    display: none;
+    height: 100%;
+}
+
+.react-table .table-print thead th {
+    white-space: nowrap;
+    /* Prevent text wrapping */
+    overflow: hidden;
+    /* Hide overflowing text */
+    text-overflow: ellipsis;
+    /* Show ellipsis (...) for text overflow */
+}
+
+
+
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 1rem 1rem 2rem 1rem;
+    }
+
+    .chrome-browser .style-to-print {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        justify-items: center;
+        align-items: center;
+    }
+
+    .page-print {
+        margin-top: 2rem;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .page-print .thead-print div:nth-child(1) {
+        width: 6rem;
+    }
+
+    .page-print .group-item .item-print div:nth-child(1) {
+        width: 6rem;
+    }
+
+    .page-print .group-item .item-print div:nth-child(4) {
+        margin-left: 3rem;
+    }
+
+    #printing {
+        display: block;
+    }
+
+    #printing #deleteBorder {
+        border: none;
+    }
+
+    #printing .card-body {
+        padding: 0 !important;
+    }
+
+    #printing #boxItem-print div div:nth-child(2) div {
+        box-shadow: none !important;
+        background: transparent !important;
+        border-radius: 0px !important;
+        border: none !important;
+    }
+}

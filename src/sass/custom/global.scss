@@ -1,0 +1,70 @@
+.card {
+  .corner-button-group {
+    position: absolute;
+    margin: var(--card-spacing-xs);
+
+    &.top {
+      top: 0;
+    }
+
+    &.bottom {
+      bottom: 0;
+    }
+
+    &.left {
+      left: 0;
+      text-align: left;
+    }
+
+    &.right {
+      right: 0;
+      text-align: right;
+    }
+  }
+}
+
+.dp-n {
+  display: none;
+}
+
+input[type='number'].text-field {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+  & {
+    -moz-appearance: textfield;
+  }
+}
+
+.btn.overlay-spinner {
+  &:before {
+    top: 0;
+    left: 0;
+    border-radius: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .position-md-absolute {
+    position: absolute;
+  }
+
+  .top-md-100 {
+    top:100%;
+  }
+}
+
+.modal {
+  z-index: 1040;
+}
+
+.react-table {
+  .card {
+    border: 1px solid transparent;
+
+    &:hover {
+      border-color: rgba(var(--separator-rgb), 1);
+    }
+  }
+}

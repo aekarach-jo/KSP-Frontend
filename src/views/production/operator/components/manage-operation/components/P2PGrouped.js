@@ -1,0 +1,526 @@
+/* eslint-disable react/button-has-type */
+/* eslint-disable react/jsx-curly-brace-presence */
+import React, { useCallback, useEffect, useState } from 'react';
+import { ReactSortable } from 'react-sortablejs';
+import { useIntl } from 'react-intl';
+import { Row, Col, Button, OverlayTrigger, Tooltip, Card, Badge, Form, ToggleButton, Accordion, Modal, Table } from 'react-bootstrap';
+
+import { SERVICE_URL } from 'config';
+import CsLineIcons from 'cs-line-icons/CsLineIcons';
+import axios from 'axios';
+import Select from 'react-select';
+import moment from 'moment';
+import useFormat from 'hooks/useFormat';
+import useClone from 'hooks/useClone';
+import useSort from 'hooks/useSort';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import clx from 'classnames';
+import InputIcon from 'react-multi-date-picker/components/input_icon';
+import DatepickerThaiYear from 'components/forms/controls/datepicker/DatepickerThaiYearConfirmButton';
+import MoveHandle from './moveHandle';
+import { detailFilter, detailSorter } from './comparators';
+import './P2PGrouped.style.scss';
+import FilterForm from './FilterForm';
+
+const P2PGrouped = ({
+  loading,
+  columns,
+  useSorting,
+  renderColumns,
+  list,
+  setList,
+  onProduceClick,
+  onRemoveGroup,
+  onDragOnEnd,
+  tableInstance,
+  onChangeDate,
+  setProductId,
+  toolingOptions,
+  machineOptions,
+  isLoadingGroup,
+  setOperationData,
+  setShowModalConfirmQc,
+  setConfirm = () => {},
+}) => {
+  const { formatMessage: f } = useIntl();
+  const { formatNumber: n } = useFormat();
+  const { cloneJson } = useClone();
+  const { sort, sortColumn, sortDirection } = useSort();
+  const [filter, setFilter] = useState('');
+  const [selectItem, setSelectItem] = useState([]);
+  const [dataList, setDataList] = useState([]);
+  const [showFilter, toggleFilter] = useState(false);
+  const [rememberCondition, setRememberCondition] = useState({ value: 'A', label: 'A' });
+  const [isOpenMethodModal, setIsOpenMethodModal] = useState(false);
+  const [dataSortable, setDataSortable] = useState([]);
+  const displayFilter = useCallback((_filter, item) => {
+    if (!_filter) {
+      return true;
+    }
+
+    return detailFilter(_filter, ['saleOrderNo', 'productCode', 'productName'])(item);
+  }, []);
+
+  const handleSelectItem = (item, e) => {
+    if (e.target.checked) {
+      setSelectItem((prev) => {
+        return [...prev, { id: item?.id, index: item?.index, planDate: moment(item?.planDate).format('YYYY-MM-DD') }];
+      });
+    } else {
+      setSelectItem((prev) => {
+        return prev.filter((data) => data.id !== item.id);
+      });
+    }
+  };
+  const handleChangeFilter = (condition) => {
+    setRememberCondition(condition);
+    setDataList(list);
+    if (condition?.value === 'A') {
+      setDataList(list);
+    }
+    if (condition?.value === 'B') {
+      const filteredData = list
+        ?.map((machine) => ({
+          ...machine,
+          planDate: machine?.planDate
+            ?.map((plan) => ({
+              ...plan,
+              itemList: plan.itemList.filter((item) => item.status !== 'NEW' && item.previousStepStatus === 'COMPLETED'),
+            }))
+            .filter((plan) => plan?.itemList?.length > 0),
+        }))
+        .filter((machine) => machine?.planDate?.length > 0);
+      console.log(filteredData);
+      setDataList(filteredData);
+    }
+    if (condition?.value === 'C') {
+      const filteredData = list
+        ?.map((machine) => ({
+          ...machine,
+          planDate: machine?.planDate
+            ?.map((plan) => ({
+              ...plan,
+              itemList: plan.itemList.filter((item) => item.status === 'NEW' && (item.previousStepStatus === 'COMPLETED' || item.previousStepStatus === null)),
+            }))
+            .filter((plan) => plan?.itemList?.length > 0),
+        }))
+        .filter((machine) => machine?.planDate?.length > 0);
+      console.log(filteredData);
+      setDataList(filteredData);
+    }
+    if (condition?.value === 'D') {
+      const filteredData = list
+        ?.map((machine) => ({
+          ...machine,
+          planDate: machine?.planDate
+            ?.map((plan) => ({
+              ...plan,
+              itemList: plan.itemList.filter((item) => item.status === 'NEW' && item.previousStepStatus === 'NEW'),
+            }))
+            .filter((plan) => plan?.itemList?.length > 0),
+        }))
+        .filter((machine) => machine?.planDate?.length > 0);
+      console.log(filteredData);
+      setDataList(filteredData);
+    }
+  };
+
+  useEffect(() => {
+    setSelectItem([]);
+    setDataList([]);
+    if (list.length > 0) {
+      const condition = rememberCondition;
+      handleChangeFilter(condition);
+    }
+  }, [list]);
+
+  const handleCloseModalClick = () => {
+    setIsOpenMethodModal(false);
+  };
+
+  const handleClickItem = (value) => {
+    setOperationData(value);
+    setConfirm(true);
+    setProductId(value?.id);
+  };
+  const setQcOperation = (id, data) => {
+    setProductId(id);
+    setShowModalConfirmQc(true);
+    setOperationData(data);
+  };
+
+  return (
+    <Card body>
+      {/* <Accordion flush defaultActiveKey="1">
+        <Accordion.Item eventKey="1">
+          <Accordion.Header as="div" className="pb-0">
+            <h2 className="font-weight-bold pb-0">รอดำเนินการ</h2>
+          </Accordion.Header> */}
+      <div className="p-0">
+        <Row className="mb-2">
+          <Col lg="2" md="12" xs="12">
+            <Select
+              classNamePrefix="react-select"
+              placeholder="Condition..."
+              options={[
+                { value: 'A', label: 'A' },
+                { value: 'B', label: 'B' },
+                { value: 'C', label: 'C' },
+                { value: 'D', label: 'D' },
+              ]}
+              isClearable
+              value={rememberCondition || ''}
+              onChange={handleChangeFilter}
+              required
+            />
+          </Col>
+        </Row>
+        <div
+          className={clx('react-table page-print mb-3', {
+            'overlay-spinner': loading,
+          })}
+        >
+          <OverlayScrollbarsComponent
+            options={{ scrollbars: { autoHide: 'leave' }, overflowBehavior: { x: 'hidden', y: 'scroll' } }}
+            style={{ maxHeight: '580px', borderRadius: '10px' }}
+          >
+            {dataList?.map((itemSize, index) => {
+              return (
+                <div key={`data-group-item-${index}`} className="group-item">
+                  {itemSize.planDate.map((dataDate, indexDate) => (
+                    <div key={indexDate}>
+                      <div className="d-flex justify-content-start gap-2 mt-2">
+                        {itemSize.machineName ? (
+                          <Badge
+                            bg="info"
+                            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+                            className="h6 badge-lg"
+                          >
+                            {itemSize.machineName === '-' ? f({ id: 'dailyPlan.field.noMachine' }) : itemSize.machineName}
+                          </Badge>
+                        ) : (
+                          <Badge
+                            bg="info"
+                            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+                            className="h6 badge-lg"
+                          >
+                            {f({ id: 'dailyPlan.field.noMachine' })}
+                          </Badge>
+                        )}
+                        <Badge
+                          bg="info"
+                          style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+                          className="h6 badge-lg"
+                        >
+                          {/* <DatepickerThaiYear disabled inputClass="custom-input-group" value={itemSize?.planDate} /> */}
+                          {moment(dataDate?.planDate).add(543, 'year').format('DD/MM/YYYY')}
+                        </Badge>
+                      </div>
+                      <>
+                        <Row>
+                          <Col xs="12" md="12" className="card-style">
+                            <OverlayScrollbarsComponent
+                              options={{ scrollbars: { autoHide: 'leave' }, overflowBehavior: { x: 'scroll', y: 'hidden' } }}
+                              style={{ maxWidth: '100%', borderRadius: '10px', paddingLeft: '0.8rem' }}
+                            >
+                              <>
+                                <div className="d-flex mb-2">
+                                  <div style={{ minWidth: '40px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    {' '}
+                                  </div>
+                                  <div style={{ minWidth: '90px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    {' '}
+                                  </div>
+                                  <div style={{ minWidth: '190px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    <div>{f({ id: 'dailyPlan.field.lot' })}</div>
+                                  </div>
+                                  <div style={{ minWidth: '320px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    <div className="ps-2">{f({ id: 'dailyPlan.field.step' })}</div>
+                                  </div>
+                                  <div style={{ minWidth: '125px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    <div>{f({ id: 'dailyPlan.field.name' })}</div>
+                                  </div>
+                                  <div style={{ minWidth: '160px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    <div>{f({ id: 'dailyPlan.field.cutting_status' })}</div>
+                                  </div>
+                                  <div style={{ minWidth: '150px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    <div>{f({ id: 'dailyPlan.field.tooling' })}</div>
+                                  </div>
+                                  <div style={{ minWidth: '150px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    <div>{f({ id: 'dailyPlan.field.standard' })}</div>
+                                  </div>
+                                  <div style={{ minWidth: '150px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    <div>{f({ id: 'dailyPlan.field.print_fotmat' })}</div>
+                                  </div>
+                                  <div style={{ minWidth: '150px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                    <div>{f({ id: 'dailyPlan.field.coating_format' })}</div>
+                                  </div>
+                                </div>
+                              </>
+                              <ReactSortable
+                                id="grouped"
+                                className="list-group grouped"
+                                group={{
+                                  name: 'productgrouped',
+                                  put: 'productGrouped',
+                                }}
+                                animation={150}
+                                list={dataDate?.itemList}
+                                setList={setDataSortable}
+                                handle=".move-handle"
+                                onEnd={(e) => onDragOnEnd(e, dataSortable)}
+                              >
+                                {dataDate?.itemList?.map((items, indexI) => {
+                                  const getLastTwoDigits = (number) => {
+                                    return number % 100;
+                                  };
+                                  let hex = '';
+                                  if (items?.producedProductSize) {
+                                    const splitSubType = items?.producedProductSize?.split('Subtype')[0];
+                                    const splitValue = splitSubType?.split('x');
+                                    const r = Number(splitValue[0].trim(' '));
+                                    const g = Number(splitValue[1].trim(' '));
+                                    const b = Number(splitValue[2].trim(' '));
+
+                                    const redRange = [180, 255];
+                                    const greenRange = [180, 255];
+                                    const blueRange = [180, 255];
+
+                                    const length = r;
+                                    const width = g;
+                                    const height = b;
+
+                                    const red =
+                                      Math.floor((length / 100 > 1 ? getLastTwoDigits(length) / 100 : length / 100) * (redRange[1] - redRange[0] + 1)) +
+                                      redRange[0];
+                                    const green =
+                                      Math.floor((width / 100 > 1 ? getLastTwoDigits(width) / 100 : width / 100) * (greenRange[1] - greenRange[0] + 1)) +
+                                      greenRange[0];
+                                    const blue =
+                                      Math.floor((height / 100 > 1 ? getLastTwoDigits(height) / 100 : height / 100) * (blueRange[1] - blueRange[0] + 1)) +
+                                      blueRange[0];
+
+                                    hex = `#${(red * 65536 + green * 256 + blue).toString(16).padStart(6, '0')}`;
+                                  }
+                                  const sum = toolingOptions?.filter((to) => items?.tooling?.some((ti) => to.value === ti));
+                                  let InactiveTooling = false;
+                                  sum?.forEach((data) => {
+                                    if (!data?.detail?.status) {
+                                      InactiveTooling = true;
+                                    }
+                                  });
+                                  const textColor =
+                                    (items.previousStepStatus === 'PENDING' ||
+                                      items.previousStepStatus === 'COMPLETED' ||
+                                      items.previousStepStatus === 'CONFIRMED' ||
+                                      items.previousStepStatus === null) &&
+                                    items.status === 'NEW';
+                                  const machineStandardList = items?.productMachineStandardList.filter((data) => data.machineId === items?.machineId);
+                                  const machineOptionFilter = machineStandardList?.map((data) => {
+                                    return { ...data, data: machineOptions?.find((fil) => fil?.value === data?.machineId) };
+                                  });
+                                  let isCDTypeMachine = false;
+                                  machineOptionFilter?.forEach((data) => {
+                                    if (data?.data?.detail?.subType === 'CD') {
+                                      isCDTypeMachine = true;
+                                    }
+                                  });
+                                  return (
+                                    <Card
+                                      key={indexI}
+                                      id={items?.saleOrderDetailId || ''}
+                                      style={{ width: '1500px', background: hex }}
+                                      className="sh-4 d-flex flex-row pt-0 pb-0 mb-1 h-100 cursor-pointer"
+                                      data-product-name={items.productAbbr}
+                                    >
+                                      <div
+                                        onClick={() => handleClickItem(items)}
+                                        style={{ minWidth: '40px' }}
+                                        className="d-flex flex-column justify-content-center align-items-end"
+                                      >
+                                        <MoveHandle className="me-1" />
+                                      </div>
+                                      <div className="d-flex flex-column justify-content-center align-items-center">
+                                        {items?.status === 'CONFIRMED' ? (
+                                          <Button
+                                            variant="body"
+                                            onClick={() => setQcOperation(items.id, items)}
+                                            className="btn-icon btn-icon-only cursor-pointer"
+                                            style={{ height: '30px', width: '30px', padding: '4px 0px' }}
+                                          >
+                                            <CsLineIcons icon="check-square" />
+                                          </Button>
+                                        ) : (
+                                          <Button
+                                            variant="body"
+                                            className="btn-icon btn-icon-only cursor-pointer"
+                                            style={{ height: '30px', width: '30px', padding: '4px 0px', opacity: '0' }}
+                                          >
+                                            <CsLineIcons icon="check-square" />
+                                          </Button>
+                                        )}
+                                      </div>
+                                      <div
+                                        onClick={() => handleClickItem(items)}
+                                        style={{ minWidth: '250px' }}
+                                        className="d-flex flex-column justify-content-center align-items-center"
+                                      >
+                                        <div style={textColor ? { color: 'white', background: '#018b00', padding: '0px 5px' } : {}}>
+                                          {items.productionOrderNo}
+                                        </div>
+                                      </div>
+                                      <div
+                                        onClick={() => handleClickItem(items)}
+                                        style={{ minWidth: '250px' }}
+                                        className="d-flex flex-column justify-content-center align-items-start ps-2"
+                                      >
+                                        <div>
+                                          {`${items?.step?.label}` || ''}
+                                          <span style={{ fontStyle: 'normal', color: 'rgba(0, 0, 0, 0.5)', fontSize: '12px' }}>{` ( ${items.status} )`}</span>
+                                        </div>
+                                      </div>
+                                      <div
+                                        onClick={() => handleClickItem(items)}
+                                        style={{ minWidth: '200px' }}
+                                        className="d-flex flex-column justify-content-center align-items-center"
+                                      >
+                                        <div>{items.productAbbr}</div>
+                                      </div>
+                                      <div
+                                        onClick={() => handleClickItem(items)}
+                                        style={{ minWidth: '150px' }}
+                                        className="d-flex flex-column justify-content-center align-items-start"
+                                      >
+                                        <div>
+                                          {`${
+                                            (items?.productionCuttingStatus === 'NEW' && f({ id: 'dailyPlan.field.cutting_status-new' })) ||
+                                            (items?.productionCuttingStatus === 'PARTIAL' && f({ id: 'dailyPlan.field.cutting_status-partial' })) ||
+                                            (items?.productionCuttingStatus === 'MATCHED' && f({ id: 'dailyPlan.field.cutting_status-matched' })) ||
+                                            (items?.productionCuttingStatus === 'COMPLETED' && f({ id: 'dailyPlan.field.cutting_status-completed' }))
+                                          } `}
+                                        </div>
+                                      </div>
+                                      <div style={{ minWidth: '150px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                        {sum?.length > 0 && (
+                                          <Button
+                                            onClick={() => setIsOpenMethodModal({ type: 'dailyPlan.field.tooling', list: sum })}
+                                            variant={`${InactiveTooling ? 'danger' : 'dark'}`}
+                                            size="sm"
+                                            className="sh-3 p-2 ms-1 d-flex flex-column justify-content-center align-items-center"
+                                          >
+                                            <span>see more ({sum?.length})</span>
+                                          </Button>
+                                        )}
+                                      </div>
+                                      <div style={{ minWidth: '150px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                        {machineStandardList.length > 0 && (
+                                          <Button
+                                            onClick={() => setIsOpenMethodModal({ type: 'dailyPlan.field.standard', list: machineStandardList })}
+                                            variant="dark"
+                                            size="sm"
+                                            className="sh-3 p-2 ms-1 d-flex flex-column justify-content-center align-items-center"
+                                          >
+                                            <span>see more ({machineStandardList.length})</span>
+                                          </Button>
+                                        )}
+                                      </div>
+                                      <div style={{ minWidth: '150px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                        {(items?.step?.value === 11 || items?.step?.value === 12 || isCDTypeMachine) && (
+                                          <Button
+                                            onClick={() =>
+                                              setIsOpenMethodModal(
+                                                items?.step?.value === 11
+                                                  ? { type: 'dailyPlan.field.print_fotmat', list: items.productPrintColor }
+                                                  : { type: 'dailyPlan.field.print_fotmat', list: items.productPrintColorBack }
+                                              )
+                                            }
+                                            variant="dark"
+                                            size="sm"
+                                            className="sh-3 p-2 ms-1 d-flex flex-column justify-content-center align-items-center"
+                                          >
+                                            <span>see more ({items.productPrintColor.length})</span>
+                                          </Button>
+                                        )}
+                                      </div>
+                                      <div style={{ minWidth: '150px' }} className="d-flex flex-column justify-content-center align-items-start">
+                                        {(items?.step?.value === 13 ||
+                                          items?.step?.value === 14 ||
+                                          items?.step?.value === 15 ||
+                                          items?.step?.value === 28 ||
+                                          items?.step?.value === 29 ||
+                                          isCDTypeMachine) && (
+                                          <Button
+                                            onClick={() => setIsOpenMethodModal({ type: 'dailyPlan.field.coating_format', list: items.productCoatingMethod })}
+                                            variant="dark"
+                                            size="sm"
+                                            className="sh-3 p-2 ms-1 d-flex flex-column justify-content-center align-items-center"
+                                          >
+                                            <span>see more ({items.productCoatingMethod.length})</span>
+                                          </Button>
+                                        )}
+                                      </div>
+                                    </Card>
+                                  );
+                                })}
+                              </ReactSortable>
+                            </OverlayScrollbarsComponent>
+                          </Col>
+                        </Row>
+                      </>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </OverlayScrollbarsComponent>
+          <Modal className="modal-right small fade" show={isOpenMethodModal} onHide={handleCloseModalClick}>
+            <Modal.Header>
+              <Modal.Title>{f({ id: `${isOpenMethodModal?.type}` })}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="p-1">
+              <Table striped>
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Value</th>
+                    {isOpenMethodModal?.list?.[0]?.detail && <th scope="col">Status</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {isOpenMethodModal?.list?.map((item, index) => (
+                    <tr key={index}>
+                      <th className={item?.detail !== undefined ? `text-${item?.detail?.status ? 'dark' : 'danger'}` : 'text-dark'} scope="row">
+                        {index + 1}
+                      </th>
+                      <td className={item?.detail !== undefined ? `text-${item?.detail?.status ? 'dark' : 'danger'}` : 'text-dark'}>
+                        {item?.text || item?.color || item?.name || item?.detail?.name}
+                      </td>
+                      <td className={item?.detail !== undefined ? `text-${item?.detail?.status ? 'dark' : 'danger'}` : 'text-dark'}>
+                        {item?.detail?.statusType?.name || item?.value || item?.density}
+                      </td>
+                      {item?.detail && (
+                        <td className={item?.detail !== undefined ? `text-${item?.detail?.status ? 'dark' : 'danger'}` : 'text-dark'}>
+                          {item?.detail?.status ? 'ACTIVE' : 'INACTIVE'}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Modal.Body>
+            <Modal.Footer className="p-1">
+              <Button variant="outline-primary" onClick={handleCloseModalClick}>
+                {f({ id: 'common.cancel' })}
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+      </div>
+      {/* </Accordion.Item>
+      </Accordion> */}
+    </Card>
+  );
+};
+
+export default P2PGrouped;

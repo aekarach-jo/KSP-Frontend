@@ -1,0 +1,6 @@
+.nav-item {
+    width: 9rem;
+}
+.nav-item .nav-link{
+    margin: auto;
+}
