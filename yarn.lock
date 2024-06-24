@@ -3893,9 +3893,9 @@
     "lodash.uniq" "^4.5.0"
 
 "caniuse-lite@^1.0.0", "caniuse-lite@^1.0.30000981", "caniuse-lite@^1.0.30001109", "caniuse-lite@^1.0.30001125", "caniuse-lite@^1.0.30001400":
-  "integrity" "sha512-ggIhCsTxmITBAMmK8yZjEhCO5/47jKXPu6Dha/wuCS4JePVL+3uiDEBuhu2aIoT+bqTOR8L76Ip1ARL9xYsEJA=="
-  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001566.tgz"
-  "version" "1.0.30001566"
+  "integrity" "sha512-bMg2vmr8XBsbL6Lr0UHXy/21m84FTxDLWn2FSqMd5PrlbMxwJlQnC2YWYxVgp66PZE+BBNF2jYQUBKCo1FDeZg=="
+  "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001636.tgz"
+  "version" "1.0.30001636"
 
 "capture-exit@^2.0.0":
   "integrity" "sha512-PiT/hQmTonHhl/HFGN+Lx3JJUznrVYJ3+AQsnthneZbvW7x+f08Tk7yLJTLEOUvBTbduLeeBkxEaYXUOUrRq6g=="
@@ -8051,7 +8051,6 @@
     "jest-snapshot" "^26.6.2"
 
 "jest-resolve@*":
-  "integrity" "sha512-tRAz2bwraHufNp+CCmAD8ciyCpXCs1NQxB5EJAmtCFy6BN81loFEGWKzYu26Y62lAJJe4X4jg36Kf+NsQyiStQ=="
   "version" "26.6.0"
   dependencies:
     "@jest/types" "^26.6.0"
@@ -11428,9 +11427,9 @@
   "version" "2.2.2"
 
 "react-date-object@^2.1.5":
-  "integrity" "sha512-810eaGk/xvQBJNncPvhwXaKcSwPRKX48jtY/5U5T1bSUnGFqmBdMvl4EVl76cyzQ8U3KX6hpF6xZ1c0eY9vvJA=="
-  "resolved" "https://registry.npmjs.org/react-date-object/-/react-date-object-2.1.7.tgz"
-  "version" "2.1.7"
+  "integrity" "sha512-iAtF2nz+jZjy3w36qKx2MsxXqbiL7UgGljz9jPjLWxWCl4rDTZUMS/i7hKKiVbL1lJlmubz1Xu6W3i6CW06kTg=="
+  "resolved" "https://registry.npmjs.org/react-date-object/-/react-date-object-2.1.5.tgz"
+  "version" "2.1.5"
 
 "react-datepicker@^4.1.1", "react-datepicker@^4.8.0":
   "integrity" "sha512-u69zXGHMpxAa4LeYR83vucQoUCJQ6m/WBsSxmUMu/M8ahTSVMMyiyQzauHgZA2NUr9y0FUgOAix71hGYUb6tvg=="
