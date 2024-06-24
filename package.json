@@ -88,7 +88,7 @@
     "start-mock": "concurrently \"npm run start-js-mock\" \"npm run start-css\"",
     "build-js": "react-scripts build --prod",
     "build-css": "sass --style=compressed --no-source-map src/sass/styles.scss:public/css/styles.css",
-    "build": "concurrently \"npm run build-css\" \"npm run build-js\"",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ./src/**/*.js",
